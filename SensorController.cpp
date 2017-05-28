@@ -7,12 +7,21 @@
 #include "SensorController.h"
 
 
+SensorController::SensorController()
+{
+  this->sensors = 0x00;
+}
+
 /**
  *
  */
 void SensorController::loadConfig(int configAddress)
 {
   this->sensors = EEPROM.read(configAddress);
+  // EEPROM memory not initialized
+  if (this->sensors>0x1F) {
+    this->sensors = 0x00;
+  }
 }
 
 /**
@@ -74,8 +83,14 @@ void SensorController::disableSensor(byte sensorId)
 boolean SensorController::isSensorEnabled(byte sensorId)
 {
   byte sensorRegister;
+  char message[50];
   
   sensorRegister = this->getSensorRegister(sensorId);
+  sprintf(message, "Sensor Id: %d (register : %d)", sensorId, sensorRegister);
+  Serial.print(message);
+  sprintf(message, " --> sensores %d | status %d", this->sensors, this->sensors & sensorRegister);
+  Serial.println(message);
+  
   return (this->sensors & sensorRegister) ? true : false;
 }
 

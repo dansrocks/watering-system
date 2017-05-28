@@ -21,6 +21,7 @@
 class SensorController
 {
   public:
+  SensorController();
   void loadConfig(int configAddress);
   void updateConfig(int configAddress);
   
